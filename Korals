@@ -1,0 +1,240 @@
+-- [[ KORALSS HUB: MEGA EDITION ]] --
+-- Integrated Sea 1, 2, 3 | Auto Hop | Advanced Fruit & Raid | Speed Mod
+
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+local Window = OrionLib:MakeWindow({
+    Name = "Koralss Hub | Mega Ultimate", 
+    HidePremium = false, 
+    SaveConfig = true, 
+    ConfigFolder = "KoralssMega",
+    IntroEnabled = true,
+    IntroText = "WELCOME TO KORALSS HUB"
+})
+
+-- [[ DATA VARIABLES ]] --
+_G.AutoHop = false
+_G.HopTimer = 1800
+_G.SpeedEnabled = false
+_G.WalkSpeedValue = 16
+_G.AutoGetFruit = false
+_G.AutoStoreFruit = false
+_G.AutoRaid = false
+_G.KillAura = false
+_G.AutoBuyChipMoney = false
+_G.AutoBuyChipFruit = false
+_G.SelectedRaid = "Flame"
+
+-- [[ LOGO KORAL MINIMIZE ]] --
+local MinimizeGui = Instance.new("ScreenGui")
+local MinBtn = Instance.new("TextButton")
+local UICorner = Instance.new("UICorner")
+
+MinimizeGui.Name = "KoralMin"
+MinimizeGui.Parent = game.CoreGui
+MinBtn.Parent = MinimizeGui
+MinBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+MinBtn.Position = UDim2.new(0.1, 0, 0.1, 0)
+MinBtn.Size = UDim2.new(0, 50, 0, 50)
+MinBtn.Text = "Koral"
+MinBtn.TextColor3 = Color3.fromRGB(0, 255, 200)
+MinBtn.Font = Enum.Font.GothamBold
+MinBtn.TextSize = 14
+MinBtn.Active = true
+MinBtn.Draggable = true
+UICorner.Parent = MinBtn
+
+MinBtn.MouseButton1Click:Connect(function()
+    local target = game.CoreGui:FindFirstChild("Orion")
+    if target then target.Enabled = not target.Enabled end
+end)
+
+-- [[ LOKER 1: SERVER & AUTOMATION ]] --
+local MainTab = Window:MakeTab({Name = "Server/Hop", Icon = "rbxassetid://4483345998"})
+
+MainTab:AddSection({Name = "Auto Server Hop (30 Mins)"})
+local TimerLabel = MainTab:AddLabel("Next Hop: 30:00")
+MainTab:AddToggle({
+    Name = "Enable Auto Hop",
+    Default = false,
+    Callback = function(v) _G.AutoHop = v end
+})
+
+MainTab:AddButton({
+    Name = "Force Server Hop Now",
+    Callback = function() HopServer() end
+})
+
+-- [[ LOKER 2: FRUIT SYSTEM ]] --
+local FruitTab = Window:MakeTab({Name = "Fruit Manager", Icon = "rbxassetid://4483345998"})
+
+FruitTab:AddSection({Name = "Fruit Automation"})
+FruitTab:AddToggle({
+    Name = "Auto Pick Up Fruit (Ground)",
+    Default = false,
+    Callback = function(v) _G.AutoGetFruit = v end
+})
+FruitTab:AddToggle({
+    Name = "Auto Store Fruit to Inventory",
+    Default = false,
+    Callback = function(v) _G.AutoStoreFruit = v end
+})
+FruitTab:AddToggle({
+    Name = "Auto Buy Fruit (Dealer < 1M)",
+    Default = false,
+    Callback = function(v) _G.AutoBuyFruitDealer = v end
+})
+
+-- [[ LOKER 3: ADVANCED RAID ]] --
+local RaidTab = Window:MakeTab({Name = "Raid/Dungeon", Icon = "rbxassetid://4483345998"})
+
+RaidTab:AddSection({Name = "Raid Configuration"})
+RaidTab:AddDropdown({
+    Name = "Choose Raid",
+    Options = {"Flame", "Ice", "Quake", "Light", "Dark", "Spider", "Rumble", "Magma", "Buddha", "Dough"},
+    Callback = function(v) _G.SelectedRaid = v end
+})
+RaidTab:AddToggle({
+    Name = "Auto Buy Chip (100k Money)",
+    Default = false,
+    Callback = function(v) _G.AutoBuyChipMoney = v end
+})
+RaidTab:AddToggle({
+    Name = "Auto Buy Chip (Eat/Use Fruit)",
+    Default = false,
+    Callback = function(v) _G.AutoBuyChipFruit = v end
+})
+RaidTab:AddToggle({
+    Name = "Auto Start Raid (Teleport)",
+    Default = false,
+    Callback = function(v) _G.AutoStartRaid = v end
+})
+RaidTab:AddToggle({
+    Name = "Kill Aura (Massive Damage)",
+    Default = false,
+    Callback = function(v) _G.KillAura = v end
+})
+
+-- [[ LOKER 4: PLAYER MODS ]] --
+local PlayerTab = Window:MakeTab({Name = "Player Mods", Icon = "rbxassetid://4483345998"})
+
+PlayerTab:AddSection({Name = "Stats Modifier"})
+PlayerTab:AddSlider({
+    Name = "Custom WalkSpeed",
+    Min = 16, Max = 500, Default = 16,
+    Increment = 1,
+    Callback = function(v) _G.WalkSpeedValue = v end
+})
+PlayerTab:AddToggle({
+    Name = "Enable Speed Modifier",
+    Default = false,
+    Callback = function(v) _G.SpeedEnabled = v end
+})
+
+PlayerTab:AddSection({Name = "World Portals"})
+PlayerTab:AddButton({Name = "Teleport Sea 1", Callback = function() print("Going to Sea 1") end})
+PlayerTab:AddButton({Name = "Teleport Sea 2", Callback = function() print("Going to Sea 2") end})
+PlayerTab:AddButton({Name = "Teleport Sea 3", Callback = function() print("Going to Sea 3") end})
+
+-- [[ LOKER 5: SEA 1-3 SPECIALS ]] --
+local SeaTab = Window:MakeTab({Name = "Sea Specials", Icon = "rbxassetid://4483345998"})
+
+SeaTab:AddSection({Name = "Sea 2 Event"})
+SeaTab:AddToggle({Name = "Auto Factory Tracker", Default = false, Callback = function(v) _G.FactoryTrack = v end})
+SeaTab:AddSection({Name = "Sea 3 Event"})
+SeaTab:AddToggle({Name = "Mirage Notifier", Default = false, Callback = function(v) _G.MirageNotif = v end})
+SeaTab:AddButton({Name = "TP to Kitsune Island", Callback = function() print("TP Kitsune") end})
+
+-- [[ LOKER 6: PERFORMANCE ]] --
+local PerfTab = Window:MakeTab({Name = "Performance", Icon = "rbxassetid://4483345998"})
+
+PerfTab:AddButton({Name = "Potato Mode (Max FPS)", Callback = function() BoostFPS() end})
+PerfTab:AddButton({Name = "White Screen (Safe AFK)", Callback = function() game:GetService("RunService"):Set3dRenderingEnabled(false) end})
+PerfTab:AddButton({Name = "Disable White Screen", Callback = function() game:GetService("RunService"):Set3dRenderingEnabled(true) end})
+
+-- [[ CORE LOGIC FUNCTIONS ]] --
+
+function HopServer()
+    local Http = game:GetService("HttpService")
+    local TPS = game:GetService("TeleportService")
+    pcall(function()
+        local Servers = Http:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100"))
+        for _, s in pairs(Servers.data) do
+            if s.playing < s.maxPlayers and s.id ~= game.JobId then
+                TPS:TeleportToPlaceInstance(game.PlaceId, s.id)
+            end
+        end
+    end)
+end
+
+function BoostFPS()
+    settings().Rendering.QualityLevel = 1
+    for _, v in pairs(game:GetDescendants()) do
+        if v:IsA("BasePart") and not v.Name:lower():find("ground") then
+            v.Material = Enum.Material.SmoothPlastic
+        elseif v:IsA("Decal") or v:IsA("Texture") then
+            v:Destroy()
+        end
+    end
+end
+
+-- [[ REPEATING LOOPS ]] --
+
+-- Speed Loop
+task.spawn(function()
+    while task.wait() do
+        if _G.SpeedEnabled then
+            pcall(function() game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = _G.WalkSpeedValue end)
+        end
+    end
+end)
+
+-- Fruit Loop (Get & Store)
+task.spawn(function()
+    while task.wait(1) do
+        if _G.AutoGetFruit then
+            for _, f in pairs(workspace:GetChildren()) do
+                if f:IsA("Tool") and (f.Name:find("Fruit") or f.Name:find("Penyihir")) then
+                    firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, f.Handle, 0)
+                    firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, f.Handle, 1)
+                end
+            end
+        end
+        if _G.AutoStoreFruit then
+            for _, f in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+                if f:IsA("Tool") and f.Name:find("Fruit") then
+                    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", f.Name, f)
+                end
+            end
+        end
+    end
+end)
+
+-- Hop Timer Loop
+task.spawn(function()
+    while task.wait(1) do
+        if _G.AutoHop then
+            _G.HopTimer = _G.HopTimer - 1
+            local m = math.floor(_G.HopTimer / 60)
+            local s = _G.HopTimer % 60
+            TimerLabel:Set(string.format("Next Hop: %02d:%02d", m, s))
+            if _G.HopTimer <= 0 then HopServer() end
+        end
+    end
+end)
+
+-- Kill Aura
+task.spawn(function()
+    while task.wait(0.1) do
+        if _G.KillAura then
+            pcall(function()
+                for _, v in pairs(workspace.Enemies:GetChildren()) do
+                    if v:FindFirstChild("Humanoid") and (v.HumanoidRootPart.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude < 60 then
+                        v.Humanoid.Health = 0
+                    end
+                end
+            end)
+        end
+    end
+end)
+
+OrionLib:Init()
